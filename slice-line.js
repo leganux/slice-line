@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const http = require('http');
 const https = require('https');
 
@@ -162,7 +163,7 @@ _\\ \\ | | (_|  __/ / /__| | | | |  __/
                 type: String
             },
             html: {
-                type: Boolean
+                type: String
             },
             attachments: [{
                 filename: String,
@@ -188,7 +189,7 @@ _\\ \\ | | (_|  __/ / /__| | | | |  __/
         this.decodeBase64 = function (data) {
             return Buffer.from(data, 'base64').toString('utf8')
         }
-        this.initialize = function () {
+        this.initialize = async function () {
             let el = this
             if (el.activeLogRequest) {
                 el.app.use(morgan(function (tokens, req, res) {
@@ -383,6 +384,7 @@ _\\ \\ | | (_|  __/ / /__| | | | |  __/
                             prepareMail.html = tmp.html
                             prepareMail.subject = tmp.subject
                             prepareMail.text = tmp.text
+                            prepareMail.attachments = tmp.attachments
                         }
 
                     }
@@ -612,6 +614,20 @@ _\\ \\ | | (_|  __/ / /__| | | | |  __/
 
             })
 
+            let defaultTemplate = await el.templateModel.findOne({name: "default"})
+            if (!defaultTemplate) {
+                defaultTemplate = new el.templateModel({
+                    name: "default",
+                    subject: "Welcome",
+                    html: "<h1>Hello</h1> {{friend}} to Slice Line, this is the default <b>template</b> ",
+                    attachments: [{
+                        filename: "Logo",
+                        content: path.join('./logo.jpg')
+                    }],
+                })
+                await defaultTemplate.save()
+            }
+
 
         }
 
@@ -704,12 +720,14 @@ _\\ \\ | | (_|  __/ / /__| | | | |  __/
             })
         }
         this.start = async function () {
+
+
             this.app.get('*', async function (_req, res) {
                 res.status(404).json({
                     success: false,
                     code: 404,
                     error: 'Resource not found',
-                    message: 'APIed Piper has been successful started',
+                    message: 'Slice Line has been successful started',
                     container_id: await getId()
                 })
             })
