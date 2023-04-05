@@ -45,7 +45,7 @@ let options = {
     secure:true,
     auth:{
         user:"admin@mygeek.zone",
-        pass:"0192837465_aBc"
+        pass:"XXXXXXXXXXXXXXXX"
         }
      },
     secure: { // if use basic auth  to consume endpoints
@@ -83,7 +83,7 @@ let options = {
     secure:true,
     auth:{
       user:"admin@mygeek.zone",
-      pass:"0192837465_aBc"
+      pass:"XXXXXXXXXXXXXXXX"
     }
   }
 }
