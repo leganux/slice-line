@@ -39,7 +39,7 @@ let options = {
   active_cors: true,
   collection_name: "mail",
   collection_template_name: "mail_template",
-  mailTransporter: {
+  mailTransporter: { // is based in nodemailer check at https://nodemailer.com/about/
     host:'smtp.hostinger.com',
     port:465,
     secure:true,
@@ -47,12 +47,13 @@ let options = {
         user:"admin@mygeek.zone",
         pass:"XXXXXXXXXXXXXXXX"
         }
-     },
+     
+},
     secure: { // if use basic auth  to consume endpoints
             user: "slide-line",
             password: "piedpipper"
           }
-        }
+}
 let mail = new sliceLine(mongoDBURI, port,options)
 
 ```

@@ -29,7 +29,7 @@ let sliceLine = function (mongoDBUri, port = 3010, options = {
 }, ssl_config = {}) {
 
     console.log(`
-    v1.0.1
+    v1.0.2
     Welcome to Slice-Line
         
  __ _ _              __ _            
