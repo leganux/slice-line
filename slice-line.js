@@ -141,11 +141,11 @@ _\\ \\ | | (_|  __/ / /__| | | | |  __/
                 type: String
             },
             html: {
-                type: Boolean
+                type: String
             },
             attachments: [{
                 filename: String,
-                content: String
+                path: String
             }],
             response: {
                 type: Schema.Types.Mixed
@@ -167,7 +167,7 @@ _\\ \\ | | (_|  __/ / /__| | | | |  __/
             },
             attachments: [{
                 filename: String,
-                content: String
+                path: String
             }],
 
         }, {timestamps: el__.db_timestamps})
@@ -388,6 +388,14 @@ _\\ \\ | | (_|  __/ / /__| | | | |  __/
                         }
 
                     }
+
+                    if (prepareMail.attachments && prepareMail.attachments.length > 0) {
+                        prepareMail.attachments = prepareMail.attachments.map(item => {
+                            item.path = path.join(item.path)
+                            return item
+                        })
+                    }
+
 
                     let info = await el.transporter.sendMail(prepareMail);
 
@@ -622,7 +630,7 @@ _\\ \\ | | (_|  __/ / /__| | | | |  __/
                     html: "<h1>Hello</h1> {{friend}} to Slice Line, this is the default <b>template</b> ",
                     attachments: [{
                         filename: "Logo",
-                        content: path.join('./logo.jpg')
+                        path: path.join('./logo.jpg')
                     }],
                 })
                 await defaultTemplate.save()
