@@ -548,6 +548,31 @@ fetch("http://localhost:3010/mail/list", requestOptions)
 ```
 
 
+## OTHER endpoints
+
+now there are another endpoints can be executed, Powered by
+APIATO ( <a href="https://www.npmjs.com/package/apiato"> https://www.npmjs.com/package/apiato </a> )
+
+Mail
+
+* GET mail/one = get a mail detail for search and filters
+* GET mail/:id = get a mail detail for id
+* GET mail/ = get a list of mail with detail for search and filters
+
+* DELETE mail/:id = deletes a mail by ID
+* POST mail/dt_agr = Caller for datatable
+
+Template
+* GET template/one = get a template detail for search and filters
+* GET template/:id = get a template detail for id
+* GET template/ = get a list of template with detail for search and filters
+* PUT template/:id = updates a template by ID  
+* DELETE template/:id = deletes a template by ID
+* POST template/dt_agr = Caller for datatable
+
+
+
+
 
 
 ## Object request query URL example

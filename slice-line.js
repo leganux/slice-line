@@ -3,6 +3,11 @@ const path = require('path');
 const http = require('http');
 const https = require('https');
 
+//import APIATO
+let apiato = require('apiato')
+//initialize microservice objecto for employee colection
+let ms_ = new apiato();
+
 const nodemailer = require("nodemailer");
 const multer = require("multer");
 const makeDir = require('make-dir');
@@ -29,7 +34,7 @@ let sliceLine = function (mongoDBUri, port = 3010, options = {
 }, ssl_config = {}) {
 
     console.log(`
-    v1.0.2
+    v1.0.3
     Welcome to Slice-Line
         
  __ _ _              __ _            
@@ -484,75 +489,6 @@ _\\ \\ | | (_|  __/ / /__| | | | |  __/
 
             })
 
-            el.app.get(el.api_base_uri + 'template/', middleware, async function (req, res) {
-
-                try {
-
-                    let {where, like, paginate, sort} = req?.query
-
-
-                    let find = {}
-                    if (where) {
-                        for (let [key, value] of Object.entries(where)) {
-                            find[key] = value
-                        }
-                    }
-                    if (like) {
-                        for (let [key, value] of Object.entries(like)) {
-                            find[key] = {$regex: value, $options: 'i'}
-                        }
-                    }
-                    let one = el.templateModel.find(find)
-
-                    let order = {}
-                    if (sort) {
-                        for (let [key, value] of Object.entries(sort)) {
-                            order[key] = value
-                        }
-                    }
-                    one.sort(order)
-
-                    if (paginate && paginate.limit && paginate.page) {
-                        one.skip(Number(paginate.limit) * Number(paginate.page))
-                        one.limit(Number(paginate.limit))
-                    }
-
-                    one = await one.exec()
-
-                    if (!one || one.length == 0) {
-                        res.status(404).json({
-                            success: false,
-                            code: 404,
-                            error: 'Templates no found',
-                            message: '404 - Not- Found ',
-                            container_id: await getId(),
-
-                        })
-                        return
-                    }
-
-                    res.status(200).json({
-                        success: true,
-                        code: 200,
-                        error: false,
-                        message: 'OK',
-                        container_id: await getId(),
-                        data: one
-                    })
-                } catch (e) {
-                    console.error(e)
-                    res.status(500).json({
-                        success: false,
-                        code: 500,
-                        error: e,
-                        message: 'Upload Error',
-                        container_id: await getId()
-                    })
-                }
-
-
-            })
-
             el.app.get(el.api_base_uri + 'list/', middleware, async function (req, res) {
 
                 try {
@@ -621,6 +557,22 @@ _\\ \\ | | (_|  __/ / /__| | | | |  __/
 
 
             })
+
+
+            el.app.post(el.api_base_uri + 'mail/dt_agr', middleware, ms_.datatable_aggregate(el.mailModel, [], '', {allowDiskUse: true}))
+            el.app.get(el.api_base_uri + 'mail/one', middleware, ms_.getOneWhere(el.mailModel, false, {}))
+            el.app.get(el.api_base_uri + 'mail/:id', middleware, ms_.getOneById(el.mailModel, false, {}))
+            el.app.get(el.api_base_uri + 'mail/', middleware, ms_.getMany(el.mailModel, false, {}))
+            el.app.put(el.api_base_uri + 'mail/:id', middleware, ms_.updateById(el.mailModel, {}, false, {}))
+            el.app.delete(el.api_base_uri + 'mail/:id', middleware, ms_.findIdAndDelete(el.mailModel, {}))
+
+            el.app.post(el.api_base_uri + 'template/dt_agr', middleware, ms_.datatable_aggregate(el.templateModel, [], '', {allowDiskUse: true}))
+            el.app.get(el.api_base_uri + 'template/one', middleware, ms_.getOneWhere(el.templateModel, false, {}))
+            el.app.get(el.api_base_uri + 'template/:id', middleware, ms_.getOneById(el.templateModel, false, {}))
+            el.app.get(el.api_base_uri + 'template/', middleware, ms_.getMany(el.templateModel, false, {}))
+            el.app.put(el.api_base_uri + 'template/:id', middleware, ms_.updateById(el.templateModel, {}, false, {}))
+            el.app.delete(el.api_base_uri + 'template/:id', middleware, ms_.findIdAndDelete(el.templateModel, {}))
+
 
             let defaultTemplate = await el.templateModel.findOne({name: "default"})
             if (!defaultTemplate) {
