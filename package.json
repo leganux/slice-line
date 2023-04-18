@@ -1,6 +1,6 @@
 {
   "name": "slice-line",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "The mail manager API simplified ",
   "main": "index.js",
   "scripts": {
